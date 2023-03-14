@@ -7,6 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class Person {
     static int count = 0;
     private int id;
@@ -15,7 +16,10 @@ public class Person {
 
     @Builder
     public Person(String name, int age) {
-        this.id = ++count;
+        this(++count, name, age);
+    }
+
+    public void update(String name, int age) {
         this.name = name;
         this.age = age;
     }

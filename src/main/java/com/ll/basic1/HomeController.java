@@ -50,7 +50,10 @@ public class HomeController {
     @GetMapping("/addPerson")
     @ResponseBody
     public String addPerson(@RequestParam String name, @RequestParam int age) {
-        Person person = new Person(name, age);
+        Person person = Person.builder()
+                .name(name)
+                .age(age)
+                .build();
         people.add(person);
         return person.getId() + "번 사람이 추가되었습니다.";
     }
@@ -60,4 +63,23 @@ public class HomeController {
     public List<Person> getPeople() {
         return people;
     }
+
+    @GetMapping("/removePerson")
+    @ResponseBody
+    public String removePerson(@RequestParam int id) {
+        boolean removed = people.removeIf(person -> person.getId() == id - 1);
+        if (!removed) {
+            return id + "번 회원이 존재하지 않습니다.";
+        }
+        return id + "번 회원 삭제 완료";
+    }
+
+    @GetMapping("/modifyPerson")
+    @ResponseBody
+    public List<Person> modifyPerson(@RequestParam int id, @RequestParam String name, @RequestParam int age) {
+        Person person = people.get(id - 1);
+        person.update(name, age);
+        return people;
+    }
+
 }
