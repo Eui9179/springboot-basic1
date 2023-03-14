@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 //@Controller
 //만약에 '/home/main' 이런 요청이 오면 아래 메서드를 실행시켜라
@@ -13,9 +16,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/home")
 public class HomeController {
     private int count;
+    private ArrayList<Person> people;
 
     public HomeController() {
         count = 0;
+        people = new ArrayList<>();
     }
 
     @GetMapping("/main")
@@ -34,8 +39,25 @@ public class HomeController {
 
     @GetMapping("/plus")
     @ResponseBody
-    public Integer plusNumbers(@RequestParam(defaultValue = "0") Integer a, @RequestParam Integer b) {
+    public Integer plusNumbers(
+            @RequestParam(defaultValue = "0") Integer a,
+            @RequestParam Integer b
+    ) {
         //b 앞에 있는 어노테이션 생략 가능
         return a + b;
+    }
+
+    @GetMapping("/addPerson")
+    @ResponseBody
+    public String addPerson(@RequestParam String name, @RequestParam int age) {
+        Person person = new Person(name, age);
+        people.add(person);
+        return person.getId() + "번 사람이 추가되었습니다.";
+    }
+
+    @GetMapping("/people")
+    @ResponseBody
+    public List<Person> getPeople() {
+        return people;
     }
 }
