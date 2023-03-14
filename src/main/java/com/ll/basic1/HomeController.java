@@ -1,5 +1,8 @@
 package com.ll.basic1;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -82,4 +86,15 @@ public class HomeController {
         return people;
     }
 
+    @GetMapping("cookie/increase")
+    @ResponseBody
+    public int showCookieIncrease(HttpServletRequest request, HttpServletResponse response) {
+        int cookieCount = Arrays.stream(request.getCookies())
+                .filter(cookie -> cookie.getName().equals("count"))
+                .map(cookie -> Integer.parseInt(cookie.getValue()))
+                .findFirst()
+                .orElse(0);
+        response.addCookie(new Cookie("count", cookieCount + 1 + ""));
+        return cookieCount;
+    }
 }
