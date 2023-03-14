@@ -3,6 +3,7 @@ package com.ll.basic1;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
@@ -11,7 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/home")
 public class HomeController {
-    private int count = 0;
+    private int count;
+
+    public HomeController() {
+        count = 0;
+    }
 
     @GetMapping("/main")
     // @ResponseBody
@@ -24,6 +29,13 @@ public class HomeController {
     @GetMapping("/increase")
     @ResponseBody
     public Integer increaseCount() {
-        return ++count;
+        return count++;
+    }
+
+    @GetMapping("/plus")
+    @ResponseBody
+    public Integer plusNumbers(@RequestParam(defaultValue = "0") Integer a, @RequestParam Integer b) {
+        //b 앞에 있는 어노테이션 생략 가능
+        return a + b;
     }
 }
