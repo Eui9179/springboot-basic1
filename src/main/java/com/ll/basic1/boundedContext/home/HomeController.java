@@ -1,5 +1,6 @@
-package com.ll.basic1;
+package com.ll.basic1.boundedContext.home;
 
+import com.ll.basic1.base.Person;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -86,15 +87,21 @@ public class HomeController {
         return people;
     }
 
-    @GetMapping("cookie/increase")
+    @GetMapping("/cookie/increase")
     @ResponseBody
-    public int showCookieIncrease(HttpServletRequest request, HttpServletResponse response) {
-        int cookieCount = Arrays.stream(request.getCookies())
-                .filter(cookie -> cookie.getName().equals("count"))
-                .map(cookie -> Integer.parseInt(cookie.getValue()))
-                .findFirst()
-                .orElse(0);
-        response.addCookie(new Cookie("count", cookieCount + 1 + ""));
-        return cookieCount;
+    public int showCookieIncrement(HttpServletRequest request, HttpServletResponse response) {
+        int ccount = 0;
+        if (request.getCookies() != null) {
+            ccount = Arrays.stream(request.getCookies())
+                    .filter(cookie -> cookie.getName().equals("count"))
+                    .map(Cookie::getValue)
+                    .mapToInt(Integer::parseInt)
+                    .findFirst()
+                    .orElse(0);
+        }
+        response.addCookie(new Cookie("count", ++ccount + ""));
+        return ccount;
     }
+
+
 }
