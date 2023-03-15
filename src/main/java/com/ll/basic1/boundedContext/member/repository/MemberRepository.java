@@ -1,14 +1,17 @@
 package com.ll.basic1.boundedContext.member.repository;
 
 import com.ll.basic1.boundedContext.member.entity.Members;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 
+@Repository
 public class MemberRepository {
     private final ArrayList<Members> membersRepository;
 
-    public MemberRepository() {
-        membersRepository = new ArrayList<>();
+    public MemberRepository(ArrayList<Members> membersRepository) {
+        this.membersRepository = membersRepository;
         init();
     }
 
