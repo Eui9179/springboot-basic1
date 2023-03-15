@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Members {
     private static int lastId = 0;
-    private int id;
+    private long id;
     private String username;
     private String password;
 

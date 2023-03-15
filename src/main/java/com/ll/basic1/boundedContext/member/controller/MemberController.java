@@ -2,6 +2,7 @@ package com.ll.basic1.boundedContext.member.controller;
 
 import com.ll.basic1.base.cookieUtil.CookieUtil;
 import com.ll.basic1.base.rsdata.RsData;
+import com.ll.basic1.boundedContext.member.entity.Members;
 import com.ll.basic1.boundedContext.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,13 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/member")
 public class MemberController {
     private final MemberService memberService;
+    private final String COOKIE_NAME = "loginMemberId";
 
     @GetMapping("/login")
     public RsData login(HttpServletResponse response, @RequestParam String username, @RequestParam String password) {
@@ -30,8 +30,13 @@ public class MemberController {
             return RsData.of("F-1", "password를 입력해주세요.");
         }
 
-        response.addCookie(new Cookie("username", username));
-        return memberService.tryLogin(username, password);
+        RsData rsData = memberService.tryLogin(username, password);
+        if (rsData.isSuccess()) {
+            Members member = memberService.findByUsername(username);
+            response.addCookie(new Cookie(COOKIE_NAME, member.getId() + ""));
+        }
+
+        return rsData;
     }
 
     @GetMapping("/me")
@@ -39,7 +44,22 @@ public class MemberController {
         if (request.getCookies() == null) {
             return RsData.of("F-1", "로그인 후 이용해주세요.");
         }
-        String usernameInCookie = CookieUtil.resolveCookieValue(request.getCookies(), "username");
-        return RsData.of("S-1", "당신의 username(은)는 " + usernameInCookie + "입니다.");
+        String cookieValue = CookieUtil.resolveCookieValue(request.getCookies(), COOKIE_NAME);
+        if (cookieValue == null)
+            return RsData.of("F-1", "로그인 후 이용해주세요.");
+
+        long userId = Long.parseLong(cookieValue);
+        Members member = memberService.findById(userId);
+
+        return RsData.of("S-1", "당신의 id(은)는 " + member.getUsername() + "입니다.", userId);
+    }
+
+    @GetMapping("/logout")
+    public RsData logout(HttpServletRequest request, HttpServletResponse response) {
+        if (request.getCookies() == null) {
+            return RsData.of("S-2", "이미 로그아웃되었습니다.");
+        }
+        CookieUtil.expireCookie(request.getCookies(), response, COOKIE_NAME);
+        return RsData.of("S-1", "로그아웃되었습니다.");
     }
 }

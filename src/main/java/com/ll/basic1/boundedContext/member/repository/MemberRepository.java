@@ -22,6 +22,13 @@ public class MemberRepository {
                 .orElse(null);
     }
 
+    public Members findById(long id) {
+        return membersRepository.stream()
+                .filter(member -> member.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
     public void addMember(Members members) {
         membersRepository.add(members);
     }
@@ -38,4 +45,5 @@ public class MemberRepository {
         membersRepository.add(new Members("good", "123412"));
         membersRepository.add(new Members("peace", "123413"));
     }
+
 }
