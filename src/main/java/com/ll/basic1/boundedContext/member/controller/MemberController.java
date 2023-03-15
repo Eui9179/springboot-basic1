@@ -33,7 +33,7 @@ public class MemberController {
         RsData rsData = memberService.tryLogin(username, password);
         if (rsData.isSuccess()) {
             Members member = memberService.findByUsername(username);
-            response.addCookie(new Cookie(COOKIE_NAME, member.getId() + ""));
+            new CookieUtil(response).setCookie(COOKIE_NAME, member.getId());
         }
 
         return rsData;
@@ -44,13 +44,12 @@ public class MemberController {
         if (request.getCookies() == null) {
             return RsData.of("F-1", "로그인 후 이용해주세요.");
         }
-        String cookieValue = CookieUtil.resolveCookieValue(request.getCookies(), COOKIE_NAME);
-        if (cookieValue == null)
+
+        long userId = new CookieUtil(request).getCookieAsLong(COOKIE_NAME, 0);
+        if (userId == 0)
             return RsData.of("F-1", "로그인 후 이용해주세요.");
 
-        long userId = Long.parseLong(cookieValue);
         Members member = memberService.findById(userId);
-
         return RsData.of("S-1", "당신의 id(은)는 " + member.getUsername() + "입니다.", userId);
     }
 
@@ -59,7 +58,7 @@ public class MemberController {
         if (request.getCookies() == null) {
             return RsData.of("S-2", "이미 로그아웃되었습니다.");
         }
-        CookieUtil.expireCookie(request.getCookies(), response, COOKIE_NAME);
+        new CookieUtil(request, response).removeCookie(COOKIE_NAME);
         return RsData.of("S-1", "로그아웃되었습니다.");
     }
 }
