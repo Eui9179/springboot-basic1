@@ -1,4 +1,4 @@
-package com.ll.basic1.base;
+package com.ll.basic1.boundedContext.home;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
