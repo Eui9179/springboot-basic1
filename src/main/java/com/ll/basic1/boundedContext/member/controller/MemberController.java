@@ -4,7 +4,6 @@ import com.ll.basic1.base.cookieUtil.CookieUtil;
 import com.ll.basic1.base.rsdata.RsData;
 import com.ll.basic1.boundedContext.member.entity.Members;
 import com.ll.basic1.boundedContext.member.service.MemberService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
