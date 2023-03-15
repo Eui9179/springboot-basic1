@@ -1,5 +1,6 @@
 package com.ll.basic1.boundedContext.member.controller;
 
+import com.ll.basic1.base.cookieUtil.CookieUtil;
 import com.ll.basic1.base.rsdata.RsData;
 import com.ll.basic1.boundedContext.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
@@ -38,12 +39,7 @@ public class MemberController {
         if (request.getCookies() == null) {
             return RsData.of("F-1", "로그인 후 이용해주세요.");
         }
-        String usernameInCookie = Arrays.stream(request.getCookies())
-                .filter(cookie -> cookie.getName().equals("username"))
-                .map(Cookie::getValue)
-                .findFirst()
-                .orElse(null);
-
+        String usernameInCookie = CookieUtil.resolveCookieValue(request.getCookies(), "username");
         return RsData.of("S-1", "당신의 username(은)는 " + usernameInCookie + "입니다.");
     }
 }
