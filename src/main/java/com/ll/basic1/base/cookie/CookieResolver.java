@@ -1,4 +1,4 @@
-package com.ll.basic1.base.cookieUtil;
+package com.ll.basic1.base.cookie;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,15 +8,15 @@ import lombok.AllArgsConstructor;
 import java.util.Arrays;
 
 @AllArgsConstructor
-public class CookieUtil {
+public class CookieResolver {
     private HttpServletRequest request;
     private HttpServletResponse response;
 
-    public CookieUtil(HttpServletRequest request) {
+    public CookieResolver(HttpServletRequest request) {
         this.request = request;
     }
 
-    public CookieUtil(HttpServletResponse response) {
+    public CookieResolver(HttpServletResponse response) {
         this.response = response;
     }
 
@@ -37,12 +37,12 @@ public class CookieUtil {
     }
 
     public long getCookieAsLong(String key, long defaultValue) {
-        return Arrays.stream(request.getCookies())
-                .filter(cookie -> cookie.getName().equals(key))
-                .map(Cookie::getValue)
-                .mapToLong(Long::parseLong)
-                .findFirst()
-                .orElse(defaultValue);
+        String cookieValue = getCookie(key, defaultValue + "");
+        try {
+            return Long.parseLong(cookieValue);
+        } catch (Exception e) {
+            return defaultValue;
+        }
     }
 
     public void removeCookie(String key) {

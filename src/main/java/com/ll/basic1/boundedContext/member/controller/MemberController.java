@@ -1,6 +1,6 @@
 package com.ll.basic1.boundedContext.member.controller;
 
-import com.ll.basic1.base.cookieUtil.CookieUtil;
+import com.ll.basic1.base.cookie.CookieResolver;
 import com.ll.basic1.base.rsdata.RsData;
 import com.ll.basic1.boundedContext.member.entity.Members;
 import com.ll.basic1.boundedContext.member.service.MemberService;
@@ -32,7 +32,7 @@ public class MemberController {
         RsData rsData = memberService.tryLogin(username, password);
         if (rsData.isSuccess()) {
             Members member = memberService.findByUsername(username);
-            new CookieUtil(response).setCookie(COOKIE_NAME, member.getId());
+            new CookieResolver(response).setCookie(COOKIE_NAME, member.getId());
         }
 
         return rsData;
@@ -44,7 +44,7 @@ public class MemberController {
             return RsData.of("F-1", "로그인 후 이용해주세요.");
         }
 
-        long userId = new CookieUtil(request).getCookieAsLong(COOKIE_NAME, 0);
+        long userId = new CookieResolver(request).getCookieAsLong(COOKIE_NAME, 0);
         if (userId == 0)
             return RsData.of("F-1", "로그인 후 이용해주세요.");
 
@@ -57,7 +57,7 @@ public class MemberController {
         if (request.getCookies() == null) {
             return RsData.of("S-2", "이미 로그아웃되었습니다.");
         }
-        new CookieUtil(request, response).removeCookie(COOKIE_NAME);
+        new CookieResolver(request, response).removeCookie(COOKIE_NAME);
         return RsData.of("S-1", "로그아웃되었습니다.");
     }
 }
