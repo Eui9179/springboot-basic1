@@ -1,5 +1,6 @@
 package com.ll.basic1.base.cookie;
 
+import com.ll.basic1.base.rsdata.RsData;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -45,12 +46,18 @@ public class CookieResolver {
         }
     }
 
-    public void removeCookie(String key) {
+    public boolean removeCookie(String key) {
+        if (request.getCookies() == null) {
+            return false;
+        }
         Arrays.stream(request.getCookies())
                 .filter(cookie -> cookie.getName().equals(key))
                 .forEach(cookie -> {
                     cookie.setMaxAge(0);
                     response.addCookie(cookie);
                 });
+
+        return Arrays.stream(request.getCookies())
+                .anyMatch(cookie -> cookie.getName().equals(key));
     }
 }

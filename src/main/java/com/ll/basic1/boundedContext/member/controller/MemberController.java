@@ -54,10 +54,10 @@ public class MemberController {
 
     @GetMapping("/logout")
     public RsData logout(HttpServletRequest request, HttpServletResponse response) {
-        if (request.getCookies() == null) {
-            return RsData.of("S-2", "이미 로그아웃되었습니다.");
+        boolean deleted = new CookieResolver(request, response).removeCookie(COOKIE_NAME);
+        if (deleted) {
+            return RsData.of("S-1", "로그아웃되었습니다.");
         }
-        new CookieResolver(request, response).removeCookie(COOKIE_NAME);
-        return RsData.of("S-1", "로그아웃되었습니다.");
+        return RsData.of("S-2", "이미 로그아웃되었습니다.");
     }
 }
