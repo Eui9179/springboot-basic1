@@ -9,14 +9,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
-@RestController
+@Controller
 @RequestMapping("/member")
 public class MemberController {
     private final MemberService memberService;
@@ -27,6 +25,16 @@ public class MemberController {
     private final String SESSION_NAME = "loginMemberId";
 
     @GetMapping("/login")
+    public String showLoginForm() {
+        if (sessionResolver.isLogin(SESSION_NAME)) {
+            return "usr/member/allogin.html";
+        }
+
+        return "usr/member/login.html";
+    }
+
+    @PostMapping("/login")
+    @ResponseBody
     public RsData login(@RequestParam String username, @RequestParam String password) {
         if (username == null || username.trim().length() == 0) {
             return RsData.of("F-3", "username을 입력해주세요.");
@@ -46,6 +54,7 @@ public class MemberController {
     }
 
     @GetMapping("/logout")
+    @ResponseBody
     public RsData logout() {
 //        boolean deleted = cookieResolver.removeCookie(COOKIE_NAME);
         boolean deleted = sessionResolver.removeSession(SESSION_NAME);
@@ -56,6 +65,7 @@ public class MemberController {
     }
 
     @GetMapping("/me")
+    @ResponseBody
     public RsData getMe(HttpServletRequest request) {
 //        if (request.getCookies() == null) {
 //            return RsData.of("F-1", "로그인 후 이용해주세요.");

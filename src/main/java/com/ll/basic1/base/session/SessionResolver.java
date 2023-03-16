@@ -37,15 +37,14 @@ public class SessionResolver {
 
     public boolean removeSession(String name) {
         HttpSession session = request.getSession();
-
         if (session.getAttribute(name) == null) return false;
 
         session.removeAttribute(name);
         return true;
     }
+
     public boolean isLogin(String sessionName) {
         long memberId = getSessionAsLong(sessionName, 0);
         return memberId > 0;
     }
-
 }
