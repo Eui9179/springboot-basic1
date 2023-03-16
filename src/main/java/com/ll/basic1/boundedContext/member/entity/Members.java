@@ -3,10 +3,12 @@ package com.ll.basic1.boundedContext.member.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Members {
     private static int lastId = 0;
     private long id;

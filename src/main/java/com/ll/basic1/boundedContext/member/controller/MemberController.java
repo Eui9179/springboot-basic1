@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -29,7 +30,6 @@ public class MemberController {
         if (sessionResolver.isLogin(SESSION_NAME)) {
             return "usr/member/allogin.html";
         }
-
         return "usr/member/login.html";
     }
 
@@ -65,20 +65,21 @@ public class MemberController {
     }
 
     @GetMapping("/me")
-    @ResponseBody
-    public RsData getMe(HttpServletRequest request) {
+    public String getMe(Model model) {
 //        if (request.getCookies() == null) {
 //            return RsData.of("F-1", "로그인 후 이용해주세요.");
 //        }
 //        long userId = cookieResolver.getCookieAsLong(COOKIE_NAME, 0);
-        long userId = sessionResolver.getSessionAsLong(SESSION_NAME, 0);
+        long memberId = sessionResolver.getSessionAsLong(SESSION_NAME, 0);
 
-        if (userId == 0)
-            return RsData.of("F-1", "로그인 후 이용해주세요.");
+//        if (memberId == 0)
+//            return RsData.of("F-1", "로그인 후 이용해주세요.");
 
-        Members member = memberService.findById(userId);
-        return RsData.of("S-1", "당신의 id(은)는 " + member.getUsername() + "입니다.", userId);
+        Members member = memberService.findById(memberId);
+
+        model.addAttribute("member", member);
+        System.out.println("member = " + member);
+//        return RsData.of("S-1", "당신의 id(은)는 " + member.getUsername() + "입니다.", memberId);
+        return "usr/member/me.html";
     }
-
-
 }
