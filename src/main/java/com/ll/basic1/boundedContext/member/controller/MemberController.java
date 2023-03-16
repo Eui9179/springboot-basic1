@@ -7,16 +7,19 @@ import com.ll.basic1.boundedContext.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/member")
 public class MemberController {
     private final MemberService memberService;
+    private final CookieResolver cookieResolver;
     private final String COOKIE_NAME = "loginMemberId";
 
     @GetMapping("/login")
@@ -32,7 +35,7 @@ public class MemberController {
         RsData rsData = memberService.tryLogin(username, password);
         if (rsData.isSuccess()) {
             Members member = memberService.findByUsername(username);
-            new CookieResolver(response).setCookie(COOKIE_NAME, member.getId());
+            cookieResolver.setCookie(COOKIE_NAME, member.getId());
         }
 
         return rsData;
@@ -44,7 +47,7 @@ public class MemberController {
             return RsData.of("F-1", "로그인 후 이용해주세요.");
         }
 
-        long userId = new CookieResolver(request).getCookieAsLong(COOKIE_NAME, 0);
+        long userId = cookieResolver.getCookieAsLong(COOKIE_NAME, 0);
         if (userId == 0)
             return RsData.of("F-1", "로그인 후 이용해주세요.");
 
@@ -54,7 +57,7 @@ public class MemberController {
 
     @GetMapping("/logout")
     public RsData logout(HttpServletRequest request, HttpServletResponse response) {
-        boolean deleted = new CookieResolver(request, response).removeCookie(COOKIE_NAME);
+        boolean deleted = cookieResolver.removeCookie(COOKIE_NAME);
         if (deleted) {
             return RsData.of("S-1", "로그아웃되었습니다.");
         }

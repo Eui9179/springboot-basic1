@@ -1,25 +1,20 @@
 package com.ll.basic1.base.cookie;
 
-import com.ll.basic1.base.rsdata.RsData;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
 
 import java.util.Arrays;
 
 @AllArgsConstructor
+@Component
+@RequestScope
 public class CookieResolver {
     private HttpServletRequest request;
     private HttpServletResponse response;
-
-    public CookieResolver(HttpServletRequest request) {
-        this.request = request;
-    }
-
-    public CookieResolver(HttpServletResponse response) {
-        this.response = response;
-    }
 
     public void setCookie(String key, String value) {
         response.addCookie(new Cookie(key, value));
