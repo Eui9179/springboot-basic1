@@ -43,5 +43,9 @@ public class SessionResolver {
         session.removeAttribute(name);
         return true;
     }
+    public boolean isLogin(String sessionName) {
+        long memberId = getSessionAsLong(sessionName, 0);
+        return memberId > 0;
+    }
 
 }
