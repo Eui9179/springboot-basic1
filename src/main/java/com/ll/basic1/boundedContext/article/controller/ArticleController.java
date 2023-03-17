@@ -31,8 +31,6 @@ public class ArticleController {
         }
 
         Article article = Article.builder()
-                .createDate(LocalDateTime.now())
-                .modifyDate(LocalDateTime.now())
                 .title(title)
                 .body(body)
                 .build();
