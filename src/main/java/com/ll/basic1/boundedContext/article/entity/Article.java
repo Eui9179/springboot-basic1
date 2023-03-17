@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -20,10 +21,10 @@ public class Article {
     private Long id;
 
     @CreatedDate
-    private LocalDateTime createdDate;
+    private LocalDate createdDate;
 
     @LastModifiedDate
-    private LocalDateTime lastModifiedDate;
+    private LocalDate modifiedDate;
 
     @Column(nullable = false)
     private String title;
@@ -32,9 +33,7 @@ public class Article {
     private String body;
 
     @Builder
-    public Article(LocalDateTime createDate, LocalDateTime modifyDate, String title, String body) {
-        this.createdDate = createDate;
-        this.lastModifiedDate = modifyDate;
+    public Article(String title, String body) {
         this.title = title;
         this.body = body;
     }

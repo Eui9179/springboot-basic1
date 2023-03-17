@@ -10,7 +10,7 @@ spring:
 
   thymeleaf:
     cache: false
-    prefix: file:src/main/resources/template/
+    prefix: file:src/main/resources/templates/
 
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
@@ -24,3 +24,4 @@ spring:
     properties:
       hibernate:
         show_sql: true
+        format_sql: true
