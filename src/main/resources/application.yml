@@ -1,0 +1,23 @@
+server:
+  port: 8010
+
+spring:
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+
+  thymeleaf:
+    cache: false
+    prefix: file:src/main/resources/template/
+
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://127.0.0.1:3306/basic1__dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+    username: leui
+    password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: create
