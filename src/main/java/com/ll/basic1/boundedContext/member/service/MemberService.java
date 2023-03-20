@@ -30,4 +30,12 @@ public class MemberService {
         return memberRepository.findByUsername(username).orElse(null);
     }
 
+    public Members join(String username, String password) {
+        Members member = Members.builder()
+                .username(username)
+                .password(password)
+                .build();
+        memberRepository.save(member);
+        return member;
+    }
 }
